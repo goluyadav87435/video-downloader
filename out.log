@@ -1,0 +1,106 @@
+nohup: ignoring input
+[youtube] Extracting URL: https://youtube.com/shorts/-9YpUOrxYSs?si=Jbkk930AJqSHGF7c
+[youtube] -9YpUOrxYSs: Downloading webpage
+[youtube] -9YpUOrxYSs: Downloading tv client config
+[youtube] -9YpUOrxYSs: Downloading tv player API JSON
+[youtube] -9YpUOrxYSs: Downloading ios player API JSON
+[youtube] -9YpUOrxYSs: Downloading m3u8 information
+[info] -9YpUOrxYSs: Downloading 1 format(s): 303+251
+[download] Destination: video.mp4.f303.webm
+[download]   0.0% of    9.97MiB at   78.76KiB/s ETA 02:10[download]   0.0% of    9.97MiB at  181.03KiB/s ETA 00:56[download]   0.1% of    9.97MiB at  375.15KiB/s ETA 00:27[download]   0.1% of    9.97MiB at  706.33KiB/s ETA 00:14[download]   0.3% of    9.97MiB at  562.67KiB/s ETA 00:18[download]   0.6% of    9.97MiB at  480.57KiB/s ETA 00:21[download]   1.2% of    9.97MiB at  724.99KiB/s ETA 00:13[download]   2.5% of    9.97MiB at 1008.62KiB/s ETA 00:09[download]   5.0% of    9.97MiB at    1.40MiB/s ETA 00:06[download]  10.0% of    9.97MiB at    1.72MiB/s ETA 00:05[download]  20.1% of    9.97MiB at    2.04MiB/s ETA 00:03[download]  40.1% of    9.97MiB at    2.41MiB/s ETA 00:02[download]  69.7% of    9.97MiB at    2.51MiB/s ETA 00:01[download]  96.3% of    9.97MiB at    2.55MiB/s ETA 00:00[download]  96.3% of    9.97MiB at  672.16KiB/s ETA 00:00[download]  96.3% of    9.97MiB at  840.60KiB/s ETA 00:00[download]  96.4% of    9.97MiB at    1.43MiB/s ETA 00:00[download]  96.5% of    9.97MiB at    2.27MiB/s ETA 00:00[download]  96.6% of    9.97MiB at  654.59KiB/s ETA 00:00[download]  96.9% of    9.97MiB at  839.14KiB/s ETA 00:00[download]  97.6% of    9.97MiB at  908.06KiB/s ETA 00:00[download]  98.8% of    9.97MiB at    1.40MiB/s ETA 00:00[download] 100.0% of    9.97MiB at    1.64MiB/s ETA 00:00[download] 100% of    9.97MiB in 00:00:04 at 2.24MiB/s   
+[download] Destination: video.mp4.f251.webm
+[download]   0.1% of    1.22MiB at   48.67KiB/s ETA 00:25[download]   0.2% of    1.22MiB at  129.37KiB/s ETA 00:09[download]   0.6% of    1.22MiB at  252.38KiB/s ETA 00:04[download]   1.2% of    1.22MiB at  461.54KiB/s ETA 00:02[download]   2.5% of    1.22MiB at  488.50KiB/s ETA 00:02[download]   5.0% of    1.22MiB at  627.78KiB/s ETA 00:01[download]  10.2% of    1.22MiB at  752.25KiB/s ETA 00:01[download]  20.4% of    1.22MiB at    1.14MiB/s ETA 00:00[download]  40.9% of    1.22MiB at    1.58MiB/s ETA 00:00[download]  81.9% of    1.22MiB at    2.14MiB/s ETA 00:00[download] 100.0% of    1.22MiB at    2.28MiB/s ETA 00:00[download] 100% of    1.22MiB in 00:00:00 at 1.59MiB/s   
+[Merger] Merging formats into "video.mp4.webm"
+Deleting original file video.mp4.f303.webm (pass -k to keep)
+Deleting original file video.mp4.f251.webm (pass -k to keep)
+Traceback (most recent call last):
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/urllib3/connectionpool.py", line 714, in urlopen
+    httplib_response = self._make_request(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/urllib3/connectionpool.py", line 466, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/urllib3/connectionpool.py", line 461, in _make_request
+    httplib_response = conn.getresponse()
+                       ^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/http/client.py", line 1430, in getresponse
+    response.begin()
+  File "/data/data/com.termux/files/usr/lib/python3.12/http/client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/http/client.py", line 300, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/requests/adapters.py", line 667, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/urllib3/connectionpool.py", line 798, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/urllib3/util/retry.py", line 550, in increment
+    raise six.reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/urllib3/packages/six.py", line 769, in reraise
+    raise value.with_traceback(tb)
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/urllib3/connectionpool.py", line 714, in urlopen
+    httplib_response = self._make_request(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/urllib3/connectionpool.py", line 466, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/urllib3/connectionpool.py", line 461, in _make_request
+    httplib_response = conn.getresponse()
+                       ^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/http/client.py", line 1430, in getresponse
+    response.begin()
+  File "/data/data/com.termux/files/usr/lib/python3.12/http/client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/http/client.py", line 300, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/data/data/com.termux/files/home/bot.py", line 33, in <module>
+    bot.polling()
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/telebot/__init__.py", line 1198, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/telebot/__init__.py", line 1273, in __threaded_polling
+    raise e
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/telebot/__init__.py", line 1235, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/telebot/util.py", line 151, in raise_exceptions
+    raise self.exception_info
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/telebot/util.py", line 94, in run
+    task(*args, **kwargs)
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/telebot/__init__.py", line 9854, in _run_middlewares_and_handler
+    result = handler['function'](message)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/home/bot.py", line 11, in send_welcome
+    bot.reply_to(message, "👋 Welcome! Send me any video link and I'll try to download it.")
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/telebot/__init__.py", line 6067, in reply_to
+    return self.send_message(message.chat.id, text, reply_parameters=reply_parameters, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/telebot/__init__.py", line 1800, in send_message
+    apihelper.send_message(
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/telebot/apihelper.py", line 275, in send_message
+    return _make_request(token, method_url, params=payload, method='post')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/telebot/apihelper.py", line 162, in _make_request
+    result = _get_req_session().request(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/data/com.termux/files/usr/lib/python3.12/site-packages/requests/adapters.py", line 682, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))

@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: telegram-video-bot
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python bot.py"
+    envVars:
+      - key: BOT_TOKEN
+        value: 8374166424:AAFhp0PrJFKveBYT5ycIcFAP3RHgBgYcRHg

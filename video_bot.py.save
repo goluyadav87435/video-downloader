@@ -1,0 +1,64 @@
+import os
+import logging
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram import Update
+from telegram.ext.callbackcontext import CallbackContext
+import yt_dlp
+
+# Bot token yahan dalein
+BOT_TOKEN = '8374166424:AAFhp0PrJFKveBYT5ycIcFAP3RHgBgYcRHg'
+
+# Logging setup
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+)
+logger = logging.getLogger(__name__)
+
+def start(update: Update, context: CallbackContext):
+    update.message.reply_text("Hello! Video link bhejein. Main MP4 format me download karke bhej dunga.")
+
+def download_video(update: Update, context: CallbackContext):
+    url = update.message.text.strip()
+
+    ydl_opts = {
+        'format': 'mp4[ext=mp4]/bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4',
+        'outtmpl': 'downloaded_video.%(ext)s',
+        'noplaylist': True,
+        'quiet': True,
+        'no_warnings': True,
+        'max_filesize': 2 * 1024 * 1024 * 1024,  # 2GB
+    }
+
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(url, download=True)
+            filename = ydl.prepare_filename(info)
+
+        filesize = os.path.getsize(filename)
+        if filesize > 2 * 1024 * 1024 * 1024:
+            os.remove(filename)
+            update.message.reply_text("File size 2GB se zyada hai, download allowed nahi hai.")
+            return
+
+        with open(filename, 'rb') as video_file:
+            update.message.reply_video(video_file)
+
+        os.remove(filename)
+
+    except Exception as e:
+        logger.error(f"Error downloading video: {e}")
+        update.message.reply_text("Wrong link please try again.")
+
+def main():
+    updater = Updater(BOT_TOKEN, use_context=True)
+    dp = updater.dispatcher
+
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, download_video))
+
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
+

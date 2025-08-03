@@ -1,0 +1,53 @@
+import os
+import logging
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram import ChatAction
+import yt_dlp
+
+BOT_TOKEN = '8374166424:AAFhp0PrJFKveBYT5ycIcFAP3RHgBgYcRHg'
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def start(update, context):
+    update.message.reply_text("👋 Welcome! Send me a public video link (YouTube, Facebook, Instagram, etc.), and I’ll send you the MP4 video (max 2GB).")
+
+def download_video(update, context):
+    url = update.message.text.strip()
+    user = update.message.from_user
+
+    update.message.reply_text("⏳ Downloading video... Please wait.")
+    update.message.chat.send_action(ChatAction.UPLOAD_VIDEO)
+
+    try:
+        ydl_opts = {
+            'format': 'best[ext=mp4][filesize<=2G]',
+            'outtmpl': '%(title)s.%(ext)s',
+            'noplaylist': True,
+        }
+
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(url, download=True)
+            filename = ydl.prepare_filename(info)
+
+        with open(filename, 'rb') as f:
+            update.message.reply_video(video=f, timeout=300)
+
+        os.remove(filename)
+
+    except Exception as e:
+        logger.error(f"Download error: {e}")
+        update.message.reply_text("⚠️ Wrong link, please try again.")
+
+def main():
+    updater = Updater(BOT_TOKEN, use_context=True)
+    dp = updater.dispatcher
+
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, download_video))
+
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
