@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Video Downloader</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    input[type="text"] {
+      width: 400px;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: white;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #progress {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <form id="downloadForm">
+    <input type="text" name="url" placeholder="Paste video link here..." required />
+    <br>
+    <button type="submit">Download</button>
+  </form>
+  <div id="progress"></div>
+
+  <script>
+    const form = document.getElementById('downloadForm');
+    const progress = document.getElementById('progress');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      progress.innerText = 'Starting download...';
+
+      const url = form.url.value;
+      const response = await fetch('/download', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'url=' + encodeURIComponent(url)
+      });
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value);
+        const match = chunk.match(/data:(.*?)\n/);
+        if (match) {
+          progress.innerText = 'Downloading: ' + match[1];
+        }
+      }
+
+      progress.innerHTML += '<br>Download complete. Check the downloads folder.';
+    });
+  </script>
+</body>
+</html>

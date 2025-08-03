@@ -1,48 +1,46 @@
+from flask import Flask, render_template, request, Response, send_from_directory
+import subprocess
+import uuid
 import os
-import yt_dlp
-from flask import Flask, request
-from telegram import Update, Bot
-from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, CommandHandler, filters
 
-TOKEN = "8374166424:AAFhp0PrJFKveBYT5ycIcFAP3RHgBgYcRHg"
-bot = Bot(token=TOKEN)
 app = Flask(__name__)
+DOWNLOAD_FOLDER = "downloads"
+os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
-application = ApplicationBuilder().token(TOKEN).build()
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("👋 Send me a video link to download.")
-
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    url = update.message.text.strip()
-    await update.message.reply_text("⏬ Downloading... Please wait.")
-    try:
-        ydl_opts = {
-            'outtmpl': 'video.%(ext)s',
-            'format': 'best[filesize<50M]/best',
-        }
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=True)
-            filename = ydl.prepare_filename(info)
-        with open(filename, 'rb') as video:
-            await update.message.reply_video(video)
-        os.remove(filename)
-    except Exception as e:
-        await update.message.reply_text(f"⚠️ Error: {str(e)}")
-
-application.add_handler(CommandHandler("start", start))
-application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-
-@app.route("/", methods=["GET"])
+@app.route('/')
 def index():
-    return "✅ Bot is running."
+    return render_template('index.html')
 
-@app.route("/", methods=["POST"])
-async def webhook():
-    update = Update.de_json(request.get_json(force=True), bot)
-    await application.process_update(update)
-    return "ok"
+@app.route('/download', methods=['POST'])
+def download():
+    url = request.form.get('url')
+    if not url:
+        return "No URL provided", 400
 
-if __name__ == "__main__":
-    app.run(port=8080)
+    filename = f"video_{uuid.uuid4().hex}.mp4"
+    output_path = os.path.join(DOWNLOAD_FOLDER, filename)
+    cmd = [
+        'yt-dlp',
+        '-f', 'bv*+ba/best',
+        '-o', output_path,
+        '--no-warnings',
+        '--quiet',
+        '--progress-template', '%(progress._percent_str)s'
+    ]
 
+    process = subprocess.Popen(cmd + [url], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+
+    def generate():
+        for line in process.stdout:
+            if '%' in line:
+                percent = line.strip().replace('\r', '').replace('\n', '')
+                yield f"data:{percent}\n\n"
+
+    return Response(generate(), mimetype='text/event-stream')
+
+@app.route('/downloads/<path:filename>')
+def serve_file(filename):
+    return send_from_directory(DOWNLOAD_FOLDER, filename, as_attachment=True)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=10000)
