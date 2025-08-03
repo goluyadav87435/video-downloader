@@ -1,46 +1,67 @@
-from flask import Flask, render_template, request, Response, send_from_directory
-import subprocess
+from flask import Flask, request, send_file, render_template_string
+import yt_dlp
 import uuid
 import os
 
 app = Flask(__name__)
-DOWNLOAD_FOLDER = "downloads"
-os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
-@app.route('/')
+HTML = """
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Video Downloader</title>
+  <style>
+    body { background-color: black; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; }
+    input, button { padding: 10px; margin-top: 10px; font-size: 16px; width: 300px; }
+    input { background-color: white; color: black; border: none; border-radius: 5px; }
+    button { background-color: white; color: black; border: none; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Paste any video link below:</h2>
+  <form method="POST">
+    <input type="text" name="url" placeholder="Enter video URL" required />
+    <button type="submit">Download</button>
+  </form>
+  {% if status %}
+    <p>{{ status }}</p>
+  {% endif %}
+</body>
+</html>
+"""
+
+@app.route("/", methods=["GET", "POST"])
 def index():
-    return render_template('index.html')
+    if request.method == "POST":
+        url = request.form.get("url")
+        if not url:
+            return render_template_string(HTML, status="Please enter a URL.")
+        
+        unique_id = str(uuid.uuid4())
+        output_path = f"{unique_id}.mp4"
+        
+        ydl_opts = {
+            'format': 'bestvideo+bestaudio/best',
+            'outtmpl': output_path,
+            'merge_output_format': 'mp4',
+            'quiet': True,
+            'noplaylist': True,
+        }
 
-@app.route('/download', methods=['POST'])
-def download():
-    url = request.form.get('url')
-    if not url:
-        return "No URL provided", 400
+        try:
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                ydl.download([url])
+            
+            return send_file(output_path, as_attachment=True)
 
-    filename = f"video_{uuid.uuid4().hex}.mp4"
-    output_path = os.path.join(DOWNLOAD_FOLDER, filename)
-    cmd = [
-        'yt-dlp',
-        '-f', 'bv*+ba/best',
-        '-o', output_path,
-        '--no-warnings',
-        '--quiet',
-        '--progress-template', '%(progress._percent_str)s'
-    ]
+        except Exception as e:
+            return render_template_string(HTML, status=f"Error: {str(e)}")
+        
+        finally:
+            if os.path.exists(output_path):
+                os.remove(output_path)
 
-    process = subprocess.Popen(cmd + [url], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+    return render_template_string(HTML, status=None)
 
-    def generate():
-        for line in process.stdout:
-            if '%' in line:
-                percent = line.strip().replace('\r', '').replace('\n', '')
-                yield f"data:{percent}\n\n"
-
-    return Response(generate(), mimetype='text/event-stream')
-
-@app.route('/downloads/<path:filename>')
-def serve_file(filename):
-    return send_from_directory(DOWNLOAD_FOLDER, filename, as_attachment=True)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
