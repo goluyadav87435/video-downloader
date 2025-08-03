@@ -1,3 +1,9 @@
-telegram-video-bot/
-videodownloader/
-
+*.mp4
+*.webm
+*.mkv
+*.flv
+*.avi
+*.mov
+*.ts
+*.3gp
+*.wmv
